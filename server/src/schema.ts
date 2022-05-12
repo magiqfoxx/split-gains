@@ -13,18 +13,19 @@ export const typeDefs = gql`
     id: ID!
     firstName: String!
     lastName: String!
-    IBAN: Int!
+    address: String
+    IBAN: String!
     movie: Movie!
     movieId: Int!
     balance: Float!
     updatedAt: String
     createdAt: String
+    transfers: Transfer[]
   }
 
   type Transfer {
     id: ID!
     movieId: Int!
-    shareholderId: Int!
     amount: Float!
     updatedAt: String
     createdAt: String
@@ -53,6 +54,6 @@ export const typeDefs = gql`
       movieId: Int!
       amount: Float!
       description: String
-    ): Transfer!
+    ): Shareholder!
   }
 `;

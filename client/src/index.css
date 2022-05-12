@@ -1,11 +1,11 @@
-*{
+* {
   font-family: sans-serif;
 }
 body {
-box-sizing: border-box;
+  margin: 0px;
+  box-sizing: border-box;
 }
-a{
+a {
   text-decoration: inherit;
   color: inherit;
 }
-

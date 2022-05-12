@@ -1,12 +1,32 @@
-import * as React from "react";
 import { Formik } from "formik";
+import { StyledButton } from "../../components/atoms/Button";
+import { useMutation, gql } from "@apollo/client";
 
-interface AddMovieProps {}
+interface NewMovieDetails {
+  title: string;
+}
+interface MovieInventory {
+  title: string;
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+const SAVE_MOVIE = gql`
+  mutation SaveMovie {
+    movie {
+      title
+    }
+  }
+`;
+const AddMovie = () => {
+  const [saveMovie, { error, data }] = useMutation<
+    { saveMovie: MovieInventory },
+    { movie: NewMovieDetails }
+  >(SAVE_MOVIE);
 
-const AddMovie = ({}: AddMovieProps) => {
   return (
     <div>
-      <h1>New movie</h1>
+      <h1>Add a new movie</h1>
       <Formik
         initialValues={{ title: "" }}
         validate={(values) => {
@@ -17,10 +37,7 @@ const AddMovie = ({}: AddMovieProps) => {
           return errors;
         }}
         onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-          }, 400);
+          saveMovie({ variables: { movie: { title: values.title } } });
         }}
       >
         {({
@@ -34,6 +51,7 @@ const AddMovie = ({}: AddMovieProps) => {
           /* and other goodies */
         }) => (
           <form onSubmit={handleSubmit}>
+            <label>Title: </label>
             <input
               type="title"
               name="title"
@@ -42,9 +60,9 @@ const AddMovie = ({}: AddMovieProps) => {
               value={values.title}
             />
             {errors.title && touched.title && errors.title}
-            <button type="submit" disabled={isSubmitting}>
+            <StyledButton type="submit" disabled={isSubmitting}>
               Submit
-            </button>
+            </StyledButton>
           </form>
         )}
       </Formik>

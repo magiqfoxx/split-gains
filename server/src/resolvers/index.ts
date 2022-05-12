@@ -1,39 +1,33 @@
 import { Context, context } from "../context";
 
 export const resolvers = {
-  Query : {
-    movie: (_parent: any, { id }: { id: number }) => {
-      return context.prisma.movie.findFirst({ where: { id } });
+  Query: {
+    movie: (_parent: any, { id }: { id: string }) => {
+      return context.prisma.movie.findFirst({ where: { id: parseInt(id) } });
     },
     movies: async (_parent: any, _args: any) => {
       return await context.prisma.movie.findMany();
     },
-    shareholder: (_parent: any, { id }: { id: number }) => {
-      return context.prisma.shareholder.findMany({
-        where: { id },
+    shareholder: (_parent: any, { id }: { id: string }) => {
+      return context.prisma.shareholder.findFirst({
+        where: { id: parseInt(id) },
       });
     },
     shareholders: (_parent: any, _args: any) => {
-      return context.prisma.shareholder.findMany({});
+      return context.prisma.shareholder.findMany();
     },
-    transfers: (_parent: any, { id }: { id: number }) => {
-      return context.prisma.transfer.findMany({
-        where: { id },
-      });
+    transfers: (_parent: any, _args: any) => {
+      return context.prisma.transfer.findMany();
     },
-    transfer: (
-      _parent: any,
-      { shareholderId }: { shareholderId: number },
-      context: Context
-    ) => {
-      return context.prisma.transfer.findMany({
-        where: { shareholderId: shareholderId },
+    transfer: (_parent: any, { id }: { id: string }) => {
+      return context.prisma.transfer.findFirst({
+        where: { id: parseInt(id) },
       });
     },
   },
-  Mutation : {
+  Mutation: {
     transfer: (
-      _parent:any,
+      _parent: any,
       args: {
         id: string;
         balance: number;
@@ -41,32 +35,21 @@ export const resolvers = {
         description: string;
         movieId: number;
         shareholderId: number;
-      },
-      context: Context
+      }
     ) => {
-      const shareholder = context.prisma.shareholder.update({
+      return context.prisma.shareholder.update({
         where: { id: Number(args.id) },
         data: {
           balance: args.balance, //add to balance!
-        },
-      });
-      const transfer = context.prisma.transfer.create({
-        data: {
-          amount: args.amount,
-          description: args.description,
-          movieId: args.movieId,
-          shareholderId: args.shareholderId
-          // args.movieId && {
-          //   connect: { id: args.movieId },
+          // transfers: {
+          //   amount: args.amount,
+          //   description: args.description,
+          //   movieId: args.movieId,
           // },
         },
       });
-      return {
-        transfer,
-        shareholder,
-      };
     },
-    createMovie: (_parent:any, args: { title: string }) => {
+    createMovie: (_parent: any, args: { title: string }) => {
       return context.prisma.movie.create({
         data: {
           title: args.title,
@@ -74,7 +57,7 @@ export const resolvers = {
       });
     },
     createShareholder: (
-      _parent:any,
+      _parent: any,
       args: {
         firstName: string;
         lastName: string;
@@ -97,5 +80,5 @@ export const resolvers = {
         },
       });
     },
-  }
+  },
 };

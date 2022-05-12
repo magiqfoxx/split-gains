@@ -1,9 +1,46 @@
-import * as React from "react";
 import { Formik } from "formik";
+import { useMutation, gql } from "@apollo/client";
+import styled from "styled-components";
+import { StyledButton } from "../../components/atoms/Button";
 
-interface AddShareholderProps {}
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+interface NewShareholderDetails {
+  firstName: string;
+  lastName: string;
+  address: string;
+  IBAN: string;
+  movieId: number;
+}
+interface ShareholderInventory {
+  firstName: string;
+  lastName: string;
+  address: string;
+  IBAN: string;
+  movieId: number;
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+const SAVE_SHAREHOLDER = gql`
+  mutation SaveShareholder {
+    shareholder {
+      firstName
+      lastName
+      address
+      IBAN
+      movieId
+    }
+  }
+`;
 
-const AddShareholder = ({}: AddShareholderProps) => {
+const AddShareholder = () => {
+  const [saveShareholder, { error, data }] = useMutation<
+    { saveShareholder: ShareholderInventory },
+    { shareholder: NewShareholderDetails }
+  >(SAVE_SHAREHOLDER);
   return (
     <div>
       <h1>New shareholder</h1>
@@ -33,10 +70,17 @@ const AddShareholder = ({}: AddShareholderProps) => {
           return errors;
         }}
         onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-          }, 400);
+          saveShareholder({
+            variables: {
+              shareholder: {
+                firstName: values.firstName,
+                lastName: values.lastName,
+                address: values.address,
+                IBAN: values.iban,
+                movieId: values.movieId ? values.movieId : 0,
+              },
+            },
+          });
         }}
       >
         {({
@@ -49,51 +93,66 @@ const AddShareholder = ({}: AddShareholderProps) => {
           isSubmitting,
           /* and other goodies */
         }) => (
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="firstName"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.firstName}
-            />
+          <Form onSubmit={handleSubmit}>
+            <div>
+              <label>First name: </label>
+              <input
+                type="text"
+                name="firstName"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.firstName}
+              />
+            </div>
             {errors.firstName && touched.firstName && errors.firstName}
-            <input
-              type="text"
-              name="lastName"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.lastName}
-            />
+            <div>
+              <label>Last name: </label>
+              <input
+                type="text"
+                name="lastName"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.lastName}
+              />
+            </div>
             {errors.lastName && touched.lastName && errors.lastName}
-            <input
-              type="text"
-              name="address"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.address}
-            />
+            <div>
+              <label>Address: </label>
+              <input
+                type="text"
+                name="address"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.address}
+              />
+            </div>
             {errors.address && touched.address && errors.address}
-            <input
-              type="number"
-              name="iban"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.iban}
-            />
+            <div>
+              <label>IBAN: </label>
+              <input
+                type="number"
+                name="iban"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.iban}
+              />
+            </div>
             {errors.iban && touched.iban && errors.iban}
-            <input
-              type="number"
-              name="movieId"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.movieId}
-            />
+            <div>
+              <label>Movie id: </label>
+              <input
+                type="number"
+                name="movieId"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.movieId}
+              />
+            </div>
             {errors.movieId && touched.movieId && errors.movieId}
-            <button type="submit" disabled={isSubmitting}>
+            <StyledButton type="submit" disabled={isSubmitting}>
               Submit
-            </button>
-          </form>
+            </StyledButton>
+          </Form>
         )}
       </Formik>
     </div>
