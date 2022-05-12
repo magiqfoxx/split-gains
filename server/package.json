@@ -1,0 +1,29 @@
+{
+  "name": "movie-revenue-be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^3.13.0",
+    "apollo-server": "^3.7.0",
+    "graphql": "^16.5.0",
+    "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.32",
+    "nodemon": "^2.0.16",
+    "prisma": "^3.13.0",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4"
+  }
+}

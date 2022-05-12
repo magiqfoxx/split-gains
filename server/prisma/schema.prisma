@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  id          Int           @id @default(autoincrement())
+  title       String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  amount      Float         @default(0)
+  Shareholder Shareholder[]
+}
+
+model Shareholder {
+  id         Int       @id @default(autoincrement())
+  firstName  String
+  lastName   String
+  address    String?
+  IBAN       String?
+  movie      Movie     @relation(fields: [movieId], references: [id])
+  movieId    Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  balance    Float     @default(0)
+  Transfer   Transfer? @relation(fields: [transferId], references: [id])
+  transferId Int?
+}
+
+model Transfer {
+  id            Int           @id @default(autoincrement())
+  movieId       Int           @unique
+  shareholderId Int           @unique
+  amount        Float         @default(0)
+  description   String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  Shareholder   Shareholder[]
+}
