@@ -2,9 +2,6 @@ import { Formik } from "formik";
 import { StyledButton } from "../../components/atoms/Button";
 import { useMutation, gql } from "@apollo/client";
 
-interface NewMovieDetails {
-  title: string;
-}
 interface MovieInventory {
   title: string;
   id: number;
@@ -12,8 +9,9 @@ interface MovieInventory {
   updatedAt: Date;
 }
 const SAVE_MOVIE = gql`
-  mutation SaveMovie {
-    movie {
+  mutation createMovie($title: String!) {
+    createMovie(title: $title) {
+      id
       title
     }
   }
@@ -21,7 +19,7 @@ const SAVE_MOVIE = gql`
 const AddMovie = () => {
   const [saveMovie, { error, data }] = useMutation<
     { saveMovie: MovieInventory },
-    { movie: NewMovieDetails }
+    { title: string }
   >(SAVE_MOVIE);
 
   return (
@@ -30,14 +28,15 @@ const AddMovie = () => {
       <Formik
         initialValues={{ title: "" }}
         validate={(values) => {
-          const errors: { title: undefined | string } = { title: undefined };
+          const errors = {};
           if (!values.title) {
+            //@ts-ignore
             errors.title = "Required";
           }
           return errors;
         }}
         onSubmit={(values, { setSubmitting }) => {
-          saveMovie({ variables: { movie: { title: values.title } } });
+          saveMovie({ variables: { title: values.title } });
         }}
       >
         {({
@@ -48,7 +47,6 @@ const AddMovie = () => {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          /* and other goodies */
         }) => (
           <form onSubmit={handleSubmit}>
             <label>Title: </label>

@@ -7,13 +7,6 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
 `;
-interface NewShareholderDetails {
-  firstName: string;
-  lastName: string;
-  address: string;
-  IBAN: string;
-  movieId: number;
-}
 interface ShareholderInventory {
   firstName: string;
   lastName: string;
@@ -25,8 +18,16 @@ interface ShareholderInventory {
   updatedAt: Date;
 }
 const SAVE_SHAREHOLDER = gql`
-  mutation SaveShareholder {
-    shareholder {
+  mutation createShareholder($firstName: String!,
+      $lastName: String!,
+      $address: String,
+      $IBAN: String,
+      $movieId: Int!) {
+    createShareholder(firstName: $firstName,
+      lastName: $lastName,
+      address: $address,
+      IBAN: $IBAN,
+      movieId: $movieId)  {
       firstName
       lastName
       address
@@ -39,7 +40,13 @@ const SAVE_SHAREHOLDER = gql`
 const AddShareholder = () => {
   const [saveShareholder, { error, data }] = useMutation<
     { saveShareholder: ShareholderInventory },
-    { shareholder: NewShareholderDetails }
+    {
+      firstName: string;
+      lastName: string;
+      address: string;
+      IBAN: string;
+      movieId: number;
+    }
   >(SAVE_SHAREHOLDER);
   return (
     <div>
@@ -50,21 +57,20 @@ const AddShareholder = () => {
           lastName: "",
           address: "",
           iban: "",
-          movieId: undefined,
+          movieId: 0,
         }}
         validate={(values) => {
-          const errors: {
-            firstName: undefined | string;
-            lastName: undefined | string;
-            movieId: undefined | string;
-          } = { firstName: undefined, lastName: undefined, movieId: undefined };
+          const errors = {};
           if (!values.firstName) {
+            //@ts-ignore
             errors.firstName = "Required";
           }
           if (!values.lastName) {
+            //@ts-ignore
             errors.lastName = "Required";
           }
           if (!values.movieId) {
+            //@ts-ignore
             errors.movieId = "Required";
           }
           return errors;
@@ -72,13 +78,11 @@ const AddShareholder = () => {
         onSubmit={(values, { setSubmitting }) => {
           saveShareholder({
             variables: {
-              shareholder: {
-                firstName: values.firstName,
-                lastName: values.lastName,
-                address: values.address,
-                IBAN: values.iban,
-                movieId: values.movieId ? values.movieId : 0,
-              },
+              firstName: values.firstName,
+              lastName: values.lastName,
+              address: values.address,
+              IBAN: values.iban,
+              movieId: values.movieId ? values.movieId : 0,
             },
           });
         }}

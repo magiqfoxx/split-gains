@@ -9,7 +9,8 @@ interface ShareholderData {
     address: string;
     IBAN: string;
     balance: number;
-    movieId: number
+    movieId: number;
+    transfers: { movieId: number; createdAt: Date; amount: number }[];
   };
 }
 
@@ -23,25 +24,42 @@ const GET_SHAREHOLDER = gql`
       IBAN
       balance
       movieId
+      transfers{
+      movieId
+      amount
+      createdAt}
     }
-
   }
 `;
-// movie($id: movieId){
-//     transfers
-//     }
+
 const Wallet = () => {
   let params = useParams();
   const { loading, data } = useQuery<ShareholderData>(GET_SHAREHOLDER, {
     variables: { id: params.walletId },
   });
 
-  return data ? <div>
+  return data ? (
+    <div>
       <span>{data.shareholder.IBAN}</span>
       <span>{data.shareholder.balance}</span>
-      <p>{data.shareholder.firstName}
-      {data.shareholder.lastName}</p>
-      <p>{data.shareholder.address}</p></div> : <div>Error</div>;
+      <p>
+        {data.shareholder.firstName}
+        {data.shareholder.lastName}
+      </p>
+      <p>{data.shareholder.address}</p>
+      <div>
+        {data.shareholder.transfers ? data.shareholder.transfers.map((transfer) => {
+          return (
+            <p>
+              <>{transfer.movieId} {transfer.amount} {transfer.createdAt}</>
+            </p>
+          );
+        }) :  <p>No transfers yet</p>}
+      </div>
+    </div>
+  ) : (
+    <div>Error</div>
+  );
 };
 
 export default Wallet;

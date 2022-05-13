@@ -5,16 +5,20 @@ import styled from "styled-components";
 type StyledButtonProps = {
   readonly variant?: "primary" | "secondary";
   readonly disabled?: boolean;
-  readonly as?: ForwardRefExoticComponent<LinkProps & RefAttributes<HTMLAnchorElement>>;
+  readonly as?: ForwardRefExoticComponent<
+    LinkProps & RefAttributes<HTMLAnchorElement>
+  >;
   readonly to?: string;
+  readonly onClick?: () => void;
 };
 
 export const StyledButton = styled.button<StyledButtonProps>`
+  cursor: ${(props) => props.disabled ? "no-drop" : "pointer"};
   padding: 8px 16px;
   border-radius: 8px;
   border: 1px solid white;
   background-color: ${(props) =>
-    props.variant === "secondary" ? "white" : props.theme.primaryLight};
+    props.disabled ? "grey" : props.variant === "secondary" ? "white" : props.theme.primaryLight};
   border-color: ${(props) =>
     props.variant === "secondary" ? props.theme.primaryLight : "white"};
   color: ${(props) =>
@@ -25,11 +29,24 @@ interface ButtonProps {
   variant?: "primary" | "secondary";
   disabled?: boolean;
   children?: React.ReactNode;
+  onClick?: () => void;
+  type?: "button" | "submit" | "reset";
 }
 
-const Button = ({ variant = "primary", disabled, children }: ButtonProps) => {
+const Button = ({
+  variant = "primary",
+  disabled,
+  children,
+  onClick,
+  type,
+}: ButtonProps) => {
   return (
-    <StyledButton variant={variant} disabled={disabled}>
+    <StyledButton
+      variant={variant}
+      disabled={disabled}
+      onClick={onClick}
+      type={type}
+    >
       {children}
     </StyledButton>
   );

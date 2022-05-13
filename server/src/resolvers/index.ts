@@ -26,28 +26,27 @@ export const resolvers = {
     },
   },
   Mutation: {
-    transfer: (
+    createTransfer: (
       _parent: any,
       args: {
-        id: string;
-        balance: number;
         amount: number;
         description: string;
-        movieId: number;
-        shareholderId: number;
+        movieId: string;
       }
     ) => {
-      return context.prisma.shareholder.update({
-        where: { id: Number(args.id) },
-        data: {
-          balance: args.balance, //add to balance!
+      //find all shareholders that have this movieId
+
+      // return context.prisma.shareholder.update({
+      //   where: { id: Number(args.id) },
+      //   data: {
+      //     balance: args.amount, //add to balance!
           // transfers: {
           //   amount: args.amount,
           //   description: args.description,
           //   movieId: args.movieId,
           // },
-        },
-      });
+      //   },
+      // });
     },
     createMovie: (_parent: any, args: { title: string }) => {
       return context.prisma.movie.create({
@@ -64,8 +63,7 @@ export const resolvers = {
         address: string;
         IBAN: string;
         movieId: number;
-      },
-      context: Context
+      }
     ) => {
       return context.prisma.shareholder.create({
         data: {

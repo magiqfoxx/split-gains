@@ -20,7 +20,7 @@ export const typeDefs = gql`
     balance: Float!
     updatedAt: String
     createdAt: String
-    transfers: Transfer[]
+    transfers: [Transfer]
   }
 
   type Transfer {
@@ -46,12 +46,11 @@ export const typeDefs = gql`
       firstName: String!
       lastName: String!
       address: String
-      IBAN: Int
+      IBAN: String
       movieId: Int!
     ): Shareholder!
-    transfer(
-      id: String!
-      movieId: Int!
+    createTransfer(
+      movieId: String!
       amount: Float!
       description: String
     ): Shareholder!
