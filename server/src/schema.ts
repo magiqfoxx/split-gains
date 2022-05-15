@@ -27,6 +27,7 @@ export const typeDefs = gql`
     id: ID!
     movieId: Int!
     amount: Float!
+    description: String
     updatedAt: String
     createdAt: String
   }
@@ -50,7 +51,7 @@ export const typeDefs = gql`
       movieId: Int!
     ): Shareholder!
     createTransfer(
-      movieId: String!
+      movieId: Int!
       amount: Float!
       description: String
     ): Shareholder!

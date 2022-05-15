@@ -26,27 +26,34 @@ export const resolvers = {
     },
   },
   Mutation: {
-    createTransfer: (
+    createTransfer: async (
       _parent: any,
       args: {
         amount: number;
         description: string;
-        movieId: string;
+        movieId: number;
       }
     ) => {
       //find all shareholders that have this movieId
+      const movieShareholders = await context.prisma.shareholder.findMany({
+        where: { movieId: args.movieId },
+      });
+      //divide the amount
+      const amountPerShareholder = args.amount/movieShareholders.length;
 
-      // return context.prisma.shareholder.update({
-      //   where: { id: Number(args.id) },
-      //   data: {
-      //     balance: args.amount, //add to balance!
-          // transfers: {
-          //   amount: args.amount,
-          //   description: args.description,
-          //   movieId: args.movieId,
-          // },
-      //   },
-      // });
+      //update each shareholder with new balance
+      return movieShareholders.map(shareholder=>{
+        context.prisma.shareholder.update({
+            where: { id: Number(shareholder.id) },
+            data: {
+              balance: shareholder.balance + amountPerShareholder,
+              // transfers: {
+              //   amount: args.amount,
+              //   description: args.description,
+              //   movieId: args.movieId,
+              // },
+            }})
+      })
     },
     createMovie: (_parent: any, args: { title: string }) => {
       return context.prisma.movie.create({

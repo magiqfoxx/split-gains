@@ -15,10 +15,15 @@ const StyledItem = styled.li`
   align-items: center;
 `;
 const Icon = styled.img`
-  width: 16px;
-  height: 16px;
+  width: ${(props) => props.theme.n * 3}px;
+  height: auto;
   margin-right: 4px;
   margin-bottom: 2px;
+`;
+const StyledLogo = styled(Link)`
+  font-family: "Macondo", sans-serif;
+  font-size: ${(props) => props.theme.n * 3}px;
+  color: ${(props) => props.theme.secondary};
 `;
 
 const Nav = () => {
@@ -26,10 +31,7 @@ const Nav = () => {
     <StyledNav>
       <StyledItem>
         <Icon src={icon} />
-        <Link to="/">SplitGains</Link>
-      </StyledItem>
-      <StyledItem>
-        <Link to="credits">Credits</Link>
+        <StyledLogo to="/">SplitGains</StyledLogo>
       </StyledItem>
     </StyledNav>
   );

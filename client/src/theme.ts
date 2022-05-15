@@ -9,6 +9,8 @@ const theme: DefaultTheme = {
   tertiary: "#fd8a02",
   secondary: "#915efd",
   dark: "#000e3f",
+  grey: '#b9aeae',
+  error: '#ff8e8e',
 
   n: 8
 };

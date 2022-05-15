@@ -7,10 +7,6 @@ import Nav from "./pages/Nav";
 import Wallet from "./pages/wallet/Wallet";
 import WalletList from "./pages/wallet/WalletList";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import AddMovie from "./pages/admin/AddMovie";
-import AddShareholder from "./pages/admin/AddShareholder";
-import NewTransfer from "./pages/admin/NewTransfer";
-
 
 const Layout = styled.div`
   height: 100%;
@@ -34,12 +30,9 @@ function App() {
       <StyledMain>
         <Routes>
           <Route index element={<Home />} />
-          <Route path="wallet" element={<WalletList />}/>
+          <Route path="wallet" element={<WalletList />} />
           <Route path="/wallet/:walletId" element={<Wallet />} />
           <Route path="admin" element={<AdminDashboard />} />
-          <Route path="admin/new-movie" element={<AddMovie />} />
-          <Route path="admin/new-shareholder" element={<AddShareholder />} />
-          <Route path="admin/new-transfer" element={<NewTransfer/>} />
         </Routes>
       </StyledMain>
       <Footer />

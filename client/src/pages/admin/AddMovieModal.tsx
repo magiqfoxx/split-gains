@@ -1,6 +1,10 @@
 import { Formik } from "formik";
-import { StyledButton } from "../../components/atoms/Button";
+import Button from "../../components/atoms/Button";
 import { useMutation, gql } from "@apollo/client";
+import Form from "../../components/atoms/Form";
+import FullInput from "../../components/molecules/FullInput";
+import Modal from "../../components/molecules/Modal";
+import { MouseEventHandler } from "react";
 
 interface MovieInventory {
   title: string;
@@ -16,15 +20,17 @@ const SAVE_MOVIE = gql`
     }
   }
 `;
-const AddMovie = () => {
+interface AddMovieModalProps {
+  onBlur?: MouseEventHandler<HTMLDivElement>;
+}
+const AddMovieModal = ({onBlur}:AddMovieModalProps) => {
   const [saveMovie, { error, data }] = useMutation<
     { saveMovie: MovieInventory },
     { title: string }
   >(SAVE_MOVIE);
 
   return (
-    <div>
-      <h1>Add a new movie</h1>
+    <Modal title="New movie" onBlur={onBlur}>
       <Formik
         initialValues={{ title: "" }}
         validate={(values) => {
@@ -48,24 +54,26 @@ const AddMovie = () => {
           handleSubmit,
           isSubmitting,
         }) => (
-          <form onSubmit={handleSubmit}>
-            <label>Title: </label>
-            <input
-              type="title"
+          <Form onSubmit={handleSubmit}>
+            <FullInput
+              type="text"
               name="title"
+              id="name"
+              label="Title"
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.title}
+              error={errors.title && touched.title}
+              errorMessage={errors.title}
             />
-            {errors.title && touched.title && errors.title}
-            <StyledButton type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting}>
               Submit
-            </StyledButton>
-          </form>
+            </Button>
+          </Form>
         )}
       </Formik>
-    </div>
+    </Modal>
   );
 };
 
-export default AddMovie;
+export default AddMovieModal;

@@ -1,0 +1,1 @@
+server: sh -c 'cd ./server/src && exec node server.jd'

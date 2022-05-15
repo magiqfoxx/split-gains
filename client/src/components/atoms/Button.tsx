@@ -1,5 +1,5 @@
 import { ForwardRefExoticComponent, RefAttributes } from "react";
-import { LinkProps } from "react-router-dom";
+import { Link, LinkProps } from "react-router-dom";
 import styled from "styled-components";
 
 type StyledButtonProps = {
@@ -8,12 +8,13 @@ type StyledButtonProps = {
   readonly as?: ForwardRefExoticComponent<
     LinkProps & RefAttributes<HTMLAnchorElement>
   >;
-  readonly to?: string;
+  readonly to?: any;
   readonly onClick?: () => void;
 };
 
 export const StyledButton = styled.button<StyledButtonProps>`
   cursor: ${(props) => props.disabled ? "no-drop" : "pointer"};
+  font-size: ${(props) => props.theme.n * 3}px;
   padding: 8px 16px;
   border-radius: 8px;
   border: 1px solid white;
@@ -31,6 +32,7 @@ interface ButtonProps {
   children?: React.ReactNode;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
+  to?: string;
 }
 
 const Button = ({
@@ -39,6 +41,7 @@ const Button = ({
   children,
   onClick,
   type,
+  to,
 }: ButtonProps) => {
   return (
     <StyledButton
@@ -46,6 +49,8 @@ const Button = ({
       disabled={disabled}
       onClick={onClick}
       type={type}
+      to={to}
+      as={to ? Link : undefined}
     >
       {children}
     </StyledButton>

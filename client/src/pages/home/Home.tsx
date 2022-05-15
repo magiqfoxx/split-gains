@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { StyledButton } from "../../components/atoms/Button";
+import Button from "../../components/atoms/Button";
 import img from "../../assets/clapperboard.png";
 
 const Title = styled.h2`
@@ -19,12 +18,12 @@ const Home = () => {
       <div>
         <Title>The first all inclusive revenue calculator.</Title>
         <Buttons>
-          <StyledButton as={Link} to="/admin">
+          <Button to="/admin">
             Login as Admin
-          </StyledButton>
-          <StyledButton variant="secondary" as={Link} to="/wallet">
+          </Button>
+          <Button variant="secondary" to="/wallet">
             Login as User
-          </StyledButton>
+          </Button>
         </Buttons>
       </div>
       <img src={img} alt='clapperboard with words 3 2 1 action over it' />

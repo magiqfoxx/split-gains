@@ -1,50 +1,62 @@
 import * as React from "react";
 import styled from "styled-components";
 
-import { StyledButton } from "../../components/atoms/Button";
-import { Link } from "react-router-dom";
+import Button from "../../components/atoms/Button";
 import movie from "../../assets/movie.png";
 import person from "../../assets/person.png";
 import money from "../../assets/money.png";
+import Slate from "../../components/molecules/Slate";
+import AddMovie from "./AddMovieModal";
+import AddShareholder from "./AddShareholderModal";
+import AddTransfer from "./AddTransferModal";
 
 export const Layout = styled.div`
   display: flex;
-  flex-direction: column;
-`;
-export const Group = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-gap: ${props=> props.theme.n * 6}px
-`;
-export const Image = styled.img`
-width:300px;
-height:300px;
+  gap: ${(props) => props.theme.n * 2}px;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const AdminDashboard = () => {
+  const [movieModalOpen, setMovieModalOpen] = React.useState(false);
+  const [personModalOpen, setPersonModalOpen] = React.useState(false);
+  const [transferModalOpen, setTransferModalOpen] = React.useState(false);
+
   React.useEffect(() => {}, []);
   return (
-    <Layout>
-      <Group>
-        <Image src={movie}  />
-        <StyledButton as={Link} to="new-movie">
-          Add new movie
-        </StyledButton>
-      </Group>
-      <Group>
-        <StyledButton as={Link} to="new-shareholder">
-          Add new shareholder
-        </StyledButton>
-        <Image src={person} />
-      </Group>
-      <Group>
-        <Image src={money} />
-        <StyledButton as={Link} to="new-transfer">
-          Initiate a new transfer
-        </StyledButton>
-      </Group>
-    </Layout>
+    <>
+      <Layout>
+        <Slate
+          img={movie}
+          button={
+            <Button onClick={() => setMovieModalOpen(true)}>
+              New movie
+            </Button>
+          }
+        />
+
+        <Slate
+          img={person}
+          button={
+            <Button onClick={() => setPersonModalOpen(true)}>
+              New shareholder
+            </Button>
+          }
+        />
+
+        <Slate
+          img={money}
+          button={
+            <Button onClick={() => setTransferModalOpen(true)}>
+              New transfer
+            </Button>
+          }
+        />
+      </Layout>
+      {movieModalOpen && <AddMovie onBlur={()=>setMovieModalOpen(false)} />}
+      {personModalOpen && <AddShareholder onBlur={()=>setPersonModalOpen(false)}/>}
+      {transferModalOpen && <AddTransfer onBlur={()=>setTransferModalOpen(false)}/>}
+    </>
   );
 };
 
