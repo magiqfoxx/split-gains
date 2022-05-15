@@ -1,1 +1,1 @@
-server: sh -c 'cd ./server/src && exec node server.jd'
+server: sh -c 'cd ./server/ && exec npm heroku-start'
